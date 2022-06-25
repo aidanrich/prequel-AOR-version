@@ -13,6 +13,7 @@ const Admin = ({ users }) => {
   if (Auth.getProfile()) {
     level = Auth.getProfile().data.level;
   };
+  const [searchName, setSearchName] = useState('');
 
 
 if (!users.length) {
@@ -21,8 +22,17 @@ if (!users.length) {
 
 return (
   <div>
+    <input className='no-outline filter' type='text' placeholder='Search Name' onChange={(event) => { setSearchName(event.target.value) }} />
+  <div>
     {level === 3 ? (<div>{users &&
-      users.map((user) => (
+      users.filter((user) => {
+        if (searchName == "") {
+            return user
+        // eslint-disable-next-line eqeqeq
+        } else if (user.name.toLowerCase().includes(searchName.toLowerCase()) ) {
+            return user
+        }
+    }).map((user) => (
         <Card className="text-center my-3" key={user._id}>
           <Card.Header as="h2" className="video-title">{user.name}</Card.Header>
           <Card.Body className="video-body">
@@ -36,6 +46,7 @@ return (
       ))}</div>
       ): (<p className="roboto-font card-body">Admin's Only</p>)}
    
+  </div>
   </div>
 )
 }
